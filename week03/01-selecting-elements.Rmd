@@ -19,7 +19,7 @@ html <- read_html(url)
 Next, let us scrape all paragraphs from our website. Recall that the CSS selector of a paragraph was "p".
 
 ```{r}
-relevant_nodes <- html_nodes(html, css = "p")
+relevant_nodes <- html_nodes(html, css = "p") # only takes CSS notation like this 
 length(relevant_nodes)
 ```
 
