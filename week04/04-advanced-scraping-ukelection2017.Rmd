@@ -56,10 +56,11 @@ driver$switchToFrame(2)
 
 # We need to click on "Yes, I'm happy" button:
 # 1. Use a command to locate the button on the page
-accept_button <- driver$___________(using = "xpath", 
-                                    value = "/html/body/div/div[3]/div[3]/div/div/button[1]")
+accept_button <- driver$findElement(using = "xpath", 
+                                    value = "/html/body/div/div[2]/div[3]/div/div/button[1]")
+
 # 2. Click on the button:
-accept_button$_____________()
+accept_button$clickElement()
 
 # Switch back to default frame
 driver$switchToFrame(NULL)
@@ -69,7 +70,7 @@ Let's assume we want to see the results of the constituency here. We can feed po
 
 ```{r}
 # 1. identify the node for input
-search_field <- driver$findElement(using = 'class name', value = '______________')
+search_field <- driver$findElement(using = 'class name', value = 'ge-lookup__input')
 
 # 2. send the post code
 search_field$sendKeysToElement(list("WC2A 2AE"))
@@ -83,14 +84,14 @@ while(driver$findElement(using = 'class name',                                  
 }                         # the while() loop runs until you get some suggestions!
 
 # 4. click "Enter"
-search_field$sendKeysToElement(list(key = "______"))
+search_field$sendKeysToElement(list(key = "enter"))
 ```
 
 Now that we have the results table displayed, we will scrape the name of constituency and the table.
 
 ```{r}
 ## get the constituency name
-const_name <- driver$findElement(using = 'class name', value = '_____________')$getElementText() 
+const_name <- driver$findElement(using = 'class name', value = 'ge-result__name')$getElementText() 
 
 ## get the div with the result information
 res_div <- driver$findElement(using = 'class name', value = 'ge-result')
@@ -151,18 +152,18 @@ get_results_by_const <- function(const_name, sec = 4){
   
   # 2. Search -----------------------------------------------------------------
   # Locate the search field and type in constituency
-  search_field <- ____________________________________________________
+  search_field <- driver$findElement(using = 'class name', value = 'ge-lookup__input')
   search_field$sendKeysToElement(list(const_name))  
   
   # Wait for the suggestions
   while(driver$findElement(using = 'class name', 
                            value = 'ge-lookup__suggestions')$getElementText() %>% 
         nchar() == 0) {
-    ___________(1)  # Hint: Sleep for 1 second
+    Sys.sleep(1)  # Hint: Sleep for 1 second
   }
 
   # Press ENTER to run the search
-  _______________________________________________
+  search_field$sendKeysToElement(list(key = "enter"))
   
   # 3. Extract results --------------------------------------------------------
   # Get the div with the result information (i.e. table with results)
@@ -177,8 +178,8 @@ get_results_by_const <- function(const_name, sec = 4){
   
   # Extract political party information
   party_class <- results_html %>% 
-    html_nodes(xpath = "______________") %>%
-    html_attr("____________")
+    html_nodes(xpath = "//tr/td[1]/span") %>%
+    html_attr("class")
   party <- sub(".+-", "", party_class)
   
   # 4. Collect everything in one dataframe ------------------------------------
@@ -189,7 +190,7 @@ get_results_by_const <- function(const_name, sec = 4){
     select(constituency, party, candidates, votes, `%`)
   
   # Don't overload the server and wait for a few seconds (default sec = 4)
-  Sys.sleep(sec)
+  Sys.sleep(4)
   
   # Return the dataset
   return(results_table)
@@ -205,7 +206,7 @@ url_const <- "https://en.wikipedia.org/wiki/United_Kingdom_Parliament_constituen
 
 const <- read_html(url_const) %>%
   html_table(fill = TRUE) %>%
-  .[[3]] %>%
+  .[[4]] %>%
   select(Constituency)
 
 ```
@@ -214,7 +215,7 @@ Finally, we feed the constituency names to the `get_results_by_const()` function
 
 Let's just get first ten of them:
 ```{r}
-data_all <- lapply(const[1:10, ], get_results_by_const) %>% 
+data_all <- lapply(const$Constituency[1:10], get_results_by_const) %>% 
   bind_rows()
 
 head(data_all)

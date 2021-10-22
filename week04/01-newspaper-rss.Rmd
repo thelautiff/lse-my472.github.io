@@ -12,6 +12,7 @@ library("rvest")
 library("tidyverse")
 library("lubridate")
 library("stringi")
+library(xml2)
 ```
 
 In this example, we will scrape an RSS feed and some articles from the [The Guardian](www.theguardian.com). Combining the techniques we have covered in the course so far, the goal is to produce a dataset in which one line represents an article.
