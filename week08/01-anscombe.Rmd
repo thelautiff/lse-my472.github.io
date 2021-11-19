@@ -2,6 +2,8 @@
 title: "Anscombe's quartet"
 date: "16/11/2020"
 output: github_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 An example of how summary statistics of a dataset can be misleading. Anscombe, F. J. (1973) Graphs in statistical analysis. American Statistician 27 (1): 17-21.

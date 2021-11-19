@@ -2,6 +2,8 @@
 title: "ggplot2 Basics: Grammar of graphics, geom types"
 date: "16/11/2020"
 output: github_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ## Introduction
