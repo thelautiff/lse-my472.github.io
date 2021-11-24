@@ -47,6 +47,7 @@ for (f in fls){
   
   # Adding to table in SQL database
   dbWriteTable(db, "posts", fb, append = TRUE)
+  #db: database connection from before, "posts": what 'fb' is gonna be called inside the db, fb: what it's called in R
   
 }
 ```
